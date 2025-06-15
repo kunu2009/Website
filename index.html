@@ -1,67 +1,413 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kunal's 7K HQ</title>
+  <title>Kunal's Interactive HQ</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
+
   <style>
-    :root {--primary: #2c3e50; --accent: #e67e22; --bg: #ecf0f1;}
-    body {margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--primary);}
-    header {background:var(--primary);color:#fff;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
-    header h1 {margin:0;font-size:1.5rem;}
-    nav a {color:#fff;margin-left:1rem;text-decoration:none;font-weight:bold;}
-    .hero {text-align:center;padding:4rem 2rem;background:url('images/stan-banner.jpg') center/cover no-repeat;color:#fff;}
-    .hero h2 {font-size:2.5rem;margin-bottom:0.5rem;}
-    .section {padding:3rem 2rem;max-width:1000px;margin:0 auto;}
-    .cards {display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;}
-    .card {background:#fff;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);overflow:hidden;text-align:center;}
-    .card img {width:100%;height:120px;object-fit:cover;}
-    .card h3 {margin:0.5rem 0;}
-    .gallery {display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;}
-    .gallery img {width:150px;height:150px;object-fit:cover;border-radius:8px;}
-    footer {background:var(--primary);color:#fff;padding:2rem;text-align:center;}
-    .socials a {margin:0 0.5rem;display:inline-block;}
+    /* Basic setup for font and smooth behavior */
+    body {
+      font-family: 'Inter', sans-serif;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Custom styles for the typewriter cursor */
+    .typewriter::after {
+      content: '|';
+      animation: blink 700ms infinite;
+      color: #f59e0b; /* Amber-500 */
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Transition for gallery items for a smooth filtering effect */
+    .gallery-item {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .gallery-item.hidden {
+        transform: scale(0.8);
+        opacity: 0;
+        width: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+
+    /* Scrollbar styling for a modern look */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: #1e293b; /* slate-800 */
+    }
+    ::-webkit-scrollbar-thumb {
+        background: #475569; /* slate-600 */
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: #64748b; /* slate-500 */
+    }
   </style>
+
+  <script>
+    // Tailwind Dark Mode Configuration
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            // Custom color palette
+            primary: {
+              light: '#34495e',
+              dark: '#e0f2fe' // light blue for text
+            },
+            secondary: {
+              light: '#2c3e50',
+              dark: '#0f172a' // slate-900
+            },
+            accent: {
+              DEFAULT: '#f59e0b', // amber-500
+              hover: '#d97706' // amber-600
+            },
+            bg: {
+              light: '#ecf0f1',
+              dark: '#020617' // slate-950
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <header>
-    <h1>7K HQ</h1>
-    <nav>
-      <a href="#apps">Apps</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#links">Socials</a>
-    </nav>
-  </header>  <section class="hero">
-    <h2>Welcome to Kunal's Digital HQ</h2>
-    <p>Portfolio, Projects, Gallery & More—all in one place.</p>
-  </section>  <section id="apps" class="section">
-    <h2>My Apps & Tools</h2>
-    <div class="cards">
-      <!-- Example card -->
-      <div class="card">
-        <img src="images/7klife.png" alt="7K Life App Logo">
-        <h3>7K Life Dashboard</h3>
-        <p><a href="https://github.com/yourusername/7klife">View on GitHub</a></p>
+<body class="bg-bg-light dark:bg-bg-dark text-primary-light dark:text-primary-dark transition-colors duration-500">
+
+  <!-- =============================================== -->
+  <!-- Header & Navigation -->
+  <!-- =============================================== -->
+  <header id="header" class="bg-bg-light/80 dark:bg-bg-dark/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 transition-all duration-300 shadow-md">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold text-accent">7K HQ</a>
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#apps" class="hover:text-accent transition-colors duration-300 font-medium">Projects</a>
+        <a href="#gallery" class="hover:text-accent transition-colors duration-300 font-medium">Gallery</a>
+        <a href="#contact" class="hover:text-accent transition-colors duration-300 font-medium">Contact</a>
+      </nav>
+      <div class="flex items-center space-x-4">
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-accent">
+          <svg id="theme-icon-sun" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <svg id="theme-icon-moon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        </button>
+        <button id="mobile-menu-button" class="md:hidden p-2 rounded-md hover:bg-gray-200 dark:hover:bg-slate-800">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+        </button>
       </div>
-      <!-- Duplicate .card blocks for each app -->
     </div>
-  </section>  <section id="gallery" class="section">
-    <h2>Gallery & Art</h2>
-    <div class="gallery">
-      <img src="images/stan1.png" alt="Stan Logo 1">
-      <img src="images/stan2.png" alt="Stan Art 2">
-      <!-- Add more images -->
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+        <a href="#apps" class="block py-2 text-center hover:text-accent transition-colors duration-300 font-medium">Projects</a>
+        <a href="#gallery" class="block py-2 text-center hover:text-accent transition-colors duration-300 font-medium">Gallery</a>
+        <a href="#contact" class="block py-2 text-center hover:text-accent transition-colors duration-300 font-medium">Contact</a>
     </div>
-  </section>  <section id="links" class="section">
-    <h2>Find Me Online</h2>
-    <div class="socials">
-      <!-- Replace # with your profile URLs -->
-      <a href="#" target="_blank"><img src="images/ico_github.png" alt="GitHub" width="32"></a>
-      <a href="#" target="_blank"><img src="images/ico_instagram.png" alt="Instagram" width="32"></a>
-      <a href="#" target="_blank"><img src="images/ico_youtube.png" alt="YouTube" width="32"></a>
-      <a href="#" target="_blank"><img src="images/ico_linkedin.png" alt="LinkedIn" width="32"></a>
+  </header>
+
+  <main>
+    <!-- =============================================== -->
+    <!-- Hero Section -->
+    <!-- =============================================== -->
+    <section class="min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-fixed" style="background-image: url('https://placehold.co/1920x1080/020617/e0f2fe?text=Welcome!')">
+      <!-- NOTE: Replace the placehold.co URL above with your own high-resolution banner image. -->
+      <div class="bg-black/60 backdrop-blur-sm p-8 rounded-xl">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-4">
+          <span class="typewriter"></span>
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+          Portfolio, Projects, Gallery & More—all in one place.
+        </p>
+        <a href="#apps" class="mt-8 inline-block bg-accent hover:bg-accent-hover text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
+          Explore My Work
+        </a>
+      </div>
+    </section>
+
+    <!-- =============================================== -->
+    <!-- My Apps & Tools Section -->
+    <!-- =============================================== -->
+    <section id="apps" class="py-20 md:py-32">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold">My Projects & Tools</h2>
+          <p class="text-lg mt-2 text-gray-600 dark:text-gray-400">A collection of apps I've built and tools I use.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Project Card 1 -->
+          <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 group">
+            <img src="https://placehold.co/600x400/2c3e50/ffffff?text=7K+Life" alt="7K Life App Logo" class="w-full h-48 object-cover">
+            <!-- NOTE: Replace placehold.co with your image, e.g., 'images/7klife.png' -->
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-2">7K Life Dashboard</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">A personal dashboard to track life goals, habits, and productivity.</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">React</span>
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">Firebase</span>
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">Tailwind</span>
+              </div>
+              <a href="#" class="font-semibold text-accent hover:text-accent-hover transition-colors duration-300">View on GitHub &rarr;</a>
+            </div>
+          </div>
+          <!-- Project Card 2 -->
+          <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 group">
+            <img src="https://placehold.co/600x400/e67e22/ffffff?text=Stan+AI" alt="Project 2" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-2">Stan AI Concept</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">An AI-powered creative assistant for brainstorming and content creation.</p>
+               <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">Python</span>
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">Flask</span>
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">OpenAI API</span>
+              </div>
+              <a href="#" class="font-semibold text-accent hover:text-accent-hover transition-colors duration-300">View on GitHub &rarr;</a>
+            </div>
+          </div>
+          <!-- Project Card 3 -->
+          <div class="bg-white dark:bg-slate-900 rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 group">
+            <img src="https://placehold.co/600x400/3498db/ffffff?text=Portfolio+V2" alt="Project 3" class="w-full h-48 object-cover">
+            <div class="p-6">
+              <h3 class="text-2xl font-bold mb-2">This Very Website</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">The source code for my interactive personal headquarters.</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">HTML</span>
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">TailwindCSS</span>
+                <span class="bg-accent/20 text-accent text-xs font-semibold px-2.5 py-0.5 rounded-full">JavaScript</span>
+              </div>
+              <a href="#" class="font-semibold text-accent hover:text-accent-hover transition-colors duration-300">View on GitHub &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =============================================== -->
+    <!-- Gallery Section -->
+    <!-- =============================================== -->
+    <section id="gallery" class="py-20 md:py-32 bg-gray-100 dark:bg-slate-900">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold">Gallery & Art</h2>
+          <p class="text-lg mt-2 text-gray-600 dark:text-gray-400">A showcase of my creative works and designs.</p>
+        </div>
+        <!-- Filter Buttons -->
+        <div id="filter-buttons" class="flex justify-center space-x-2 md:space-x-4 mb-8">
+          <button data-filter="all" class="filter-btn active bg-accent text-white py-2 px-5 rounded-full font-semibold transition-all duration-300">All</button>
+          <button data-filter="art" class="filter-btn bg-white dark:bg-slate-800 py-2 px-5 rounded-full font-semibold transition-all duration-300 hover:bg-accent/50">Art</button>
+          <button data-filter="logos" class="filter-btn bg-white dark:bg-slate-800 py-2 px-5 rounded-full font-semibold transition-all duration-300 hover:bg-accent/50">Logos</button>
+          <button data-filter="concepts" class="filter-btn bg-white dark:bg-slate-800 py-2 px-5 rounded-full font-semibold transition-all duration-300 hover:bg-accent/50">Concepts</button>
+        </div>
+        <!-- Gallery Grid -->
+        <div id="gallery-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <!-- NOTE: Add your images below. Use data-category to filter. Use data-src for the full-size image in the lightbox. -->
+          <div class="gallery-item" data-category="logos" data-src="https://placehold.co/1200x1200/3498db/ffffff?text=Logo+1">
+            <img src="https://placehold.co/400x400/3498db/ffffff?text=Logo+1" alt="Stan Logo 1" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="gallery-item" data-category="art" data-src="https://placehold.co/1200x1200/e74c3c/ffffff?text=Art+1">
+            <img src="https://placehold.co/400x400/e74c3c/ffffff?text=Art+1" alt="Stan Art 2" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+           <div class="gallery-item" data-category="concepts" data-src="https://placehold.co/1200x1200/9b59b6/ffffff?text=Concept+1">
+            <img src="https://placehold.co/400x400/9b59b6/ffffff?text=Concept+1" alt="Concept 1" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="gallery-item" data-category="logos" data-src="https://placehold.co/1200x1200/3498db/ffffff?text=Logo+2">
+            <img src="https://placehold.co/400x400/3498db/ffffff?text=Logo+2" alt="Logo 2" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+           <div class="gallery-item" data-category="art" data-src="https://placehold.co/1200x1200/2ecc71/ffffff?text=Art+2">
+            <img src="https://placehold.co/400x400/2ecc71/ffffff?text=Art+2" alt="Art 2" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="gallery-item" data-category="art" data-src="https://placehold.co/1200x1200/f1c40f/ffffff?text=Art+3">
+            <img src="https://placehold.co/400x400/f1c40f/ffffff?text=Art+3" alt="Art 3" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+           <div class="gallery-item" data-category="concepts" data-src="https://placehold.co/1200x1200/1abc9c/ffffff?text=Concept+2">
+            <img src="https://placehold.co/400x400/1abc9c/ffffff?text=Concept+2" alt="Concept 2" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+          <div class="gallery-item" data-category="logos" data-src="https://placehold.co/1200x1200/34495e/ffffff?text=Logo+3">
+            <img src="https://placehold.co/400x400/34495e/ffffff?text=Logo+3" alt="Logo 3" class="w-full h-full object-cover rounded-lg shadow-md cursor-pointer transform hover:scale-105 transition-transform duration-300">
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- =============================================== -->
+  <!-- Footer -->
+  <!-- =============================================== -->
+  <footer id="contact" class="bg-secondary-light dark:bg-secondary-dark text-white">
+    <div class="container mx-auto px-6 py-12">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold mb-4">Get In Touch</h2>
+            <p class="max-w-md mx-auto mb-8 text-gray-300">I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.</p>
+            <a href="mailto:hello@kunal.com" class="bg-accent hover:bg-accent-hover text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105">
+                Say Hello
+            </a>
+        </div>
+        <div class="mt-12 flex justify-center space-x-6">
+            <!-- Replace # with your actual social media links -->
+            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.735 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.039c-2.748 0-3.09.01-4.177.06-1.087.05-1.84.218-2.49.47-1.32.51-2.274 1.46-2.784 2.78C2.28 6.13 2.11 6.885 2.06 7.973 2.01 9.06 2 9.402 2 12.15s.01 3.09.06 4.177c.05 1.087.218 1.84.47 2.49.51 1.32 1.46 2.274 2.78 2.784 1.25.46 2.007.63 3.094.68 1.087.05 1.427.06 4.177.06s3.09-.01 4.177-.06c1.087-.05 1.84-.218 2.49-.47 1.32-.51 2.274-1.46 2.784-2.78.46-1.25.63-2.007.68-3.094.05-1.087.06-1.427.06-4.177s-.01-3.09-.06-4.177c-.05-1.087-.218-1.84-.47-2.49-.51-1.32-1.46-2.274-2.78-2.784C18.06 2.28 17.302 2.11 16.216 2.06 15.13 2.01 14.788 2 12 2.039zm0 1.822c2.69 0 3.02.01 4.075.058.975.044 1.502.207 1.848.338.44.16.74.383 1.03.673.29.29.514.59.673 1.03.13.346.294.873.338 1.848.048 1.055.058 1.385.058 4.075s-.01 3.02-.058 4.075c-.044.975-.208 1.502-.338 1.848a2.9 2.9 0 01-.673 1.03c-.29.29-.59.514-1.03.673-.346.13-.873.294-1.848.338-1.055.048-1.385.058-4.075.058s-3.02-.01-4.075-.058c-.975-.044-1.502-.208-1.848-.338a2.9 2.9 0 01-1.03-.673 2.902 2.902 0 01-.673-1.03c-.13-.346-.294-.873-.338-1.848-.048-1.055-.058-1.385-.058-4.075s.01-3.02.058-4.075c.044-.975.208-1.502.338-1.848.16-.44.383-.74.673-1.03.29-.29.59-.514 1.03-.673.346-.13.873-.294 1.848-.338C8.98 3.87 9.31 3.86 12 3.86zm0 3.25a5.05 5.05 0 100 10.1 5.05 5.05 0 000-10.1zm0 8.28a3.23 3.23 0 110-6.46 3.23 3.23 0 010 6.46zm6.27-7.832a1.19 1.19 0 100 2.38 1.19 1.19 0 000-2.38z" /></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.701V4.115l7.79 4.026-7.79 7.744z"></path></svg></a>
+            <a href="#" class="text-gray-400 hover:text-white transition duration-300"><svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-7 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm-2 0a2 2 0 1 0-4 0 2 2 0 0 0 4 0zm7-5H5v14h14V6z"/></svg></a>
+        </div>
+        <div class="text-center text-gray-400 mt-12 pt-8 border-t border-gray-700">
+            <p>&copy; <span id="copyright-year"></span> Kunal. All Rights Reserved.</p>
+        </div>
     </div>
-  </section>  <footer>
-    <p>&copy; 2025 Kunal. Built with ⚡ GitHub Pages.</p>
   </footer>
+
+  <!-- =============================================== -->
+  <!-- Lightbox Modal -->
+  <!-- =============================================== -->
+  <div id="lightbox" class="fixed inset-0 bg-black/90 flex items-center justify-center z-[999] hidden opacity-0 transition-opacity duration-300">
+    <img id="lightbox-img" src="" alt="Full-size gallery image" class="max-w-[90vw] max-h-[90vh] rounded-lg">
+    <button id="lightbox-close" class="absolute top-6 right-6 text-white text-5xl font-bold hover:text-gray-400 transition-colors">&times;</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // --- THEME SWITCHER ---
+      const themeToggle = document.getElementById('theme-toggle');
+      const sunIcon = document.getElementById('theme-icon-sun');
+      const moonIcon = document.getElementById('theme-icon-moon');
+      
+      const applyTheme = (theme) => {
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+          sunIcon.classList.remove('hidden');
+          moonIcon.classList.add('hidden');
+        } else {
+          document.documentElement.classList.remove('dark');
+          sunIcon.classList.add('hidden');
+          moonIcon.classList.remove('hidden');
+        }
+      };
+
+      // Check for saved theme in localStorage
+      const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      applyTheme(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        const newTheme = isDark ? 'dark' : 'light';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+      });
+
+      // --- TYPEWRITER EFFECT ---
+      const typewriterElement = document.querySelector('.typewriter');
+      const textToType = "Welcome to Kunal's Digital HQ";
+      let charIndex = 0;
+
+      function type() {
+        if (charIndex < textToType.length) {
+          typewriterElement.textContent += textToType.charAt(charIndex);
+          charIndex++;
+          setTimeout(type, 100); // Adjust typing speed here (in ms)
+        }
+      }
+      type();
+
+      // --- MOBILE MENU TOGGLE ---
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenuButton.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+      });
+      
+      // Close mobile menu when a link is clicked
+      mobileMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+              mobileMenu.classList.add('hidden');
+          });
+      });
+      
+
+      // --- GALLERY FILTER ---
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const galleryItems = document.querySelectorAll('.gallery-item');
+      const galleryGrid = document.getElementById('gallery-grid');
+
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Update active button style
+          filterButtons.forEach(btn => btn.classList.remove('active', 'bg-accent', 'text-white'));
+          button.classList.add('active', 'bg-accent', 'text-white');
+          
+          const filter = button.getAttribute('data-filter');
+
+          galleryItems.forEach(item => {
+            const category = item.getAttribute('data-category');
+            if (filter === 'all' || filter === category) {
+              item.classList.remove('hidden');
+            } else {
+              item.classList.add('hidden');
+            }
+          });
+        });
+      });
+      
+      // --- LIGHTBOX ---
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxClose = document.getElementById('lightbox-close');
+
+      galleryGrid.addEventListener('click', (e) => {
+          const imgElement = e.target.closest('img');
+          if(imgElement) {
+              const galleryItem = imgElement.closest('.gallery-item');
+              if(galleryItem) {
+                  const fullSrc = galleryItem.dataset.src;
+                  lightboxImg.setAttribute('src', fullSrc);
+                  lightbox.classList.remove('hidden');
+                  setTimeout(() => lightbox.classList.add('opacity-100'), 10);
+              }
+          }
+      });
+
+      const closeLightbox = () => {
+          lightbox.classList.remove('opacity-100');
+          setTimeout(() => lightbox.classList.add('hidden'), 300);
+      };
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) { // Close only if clicking on the background
+              closeLightbox();
+          }
+      });
+       document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+          closeLightbox();
+        }
+      });
+      
+      // --- COPYRIGHT YEAR ---
+      document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    });
+  </script>
 </body>
 </html>
+
